@@ -1,0 +1,10 @@
+load("@rules_cc//cc:defs.bzl", "cc_test")
+
+cc_test(
+    name = "cmath_test",
+    srcs = ["cmath_test.cc"],
+    deps = [
+        "//:cnstx",
+        "@com_google_googletest//:gtest_main",
+    ],
+)
