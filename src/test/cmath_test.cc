@@ -79,4 +79,22 @@ TEST(CMathTest, ldexp) {
   ldexp_test<double, -3, +333>();
 }
 
+template <int num, int den, int exp>
+void div_mod_test() {
+  constexpr double x = num;
+  constexpr double y = den;
+  constexpr auto xx = cnstx::internal::fraction64(x);
+  constexpr auto yy = cnstx::internal::fraction64(y);
+  constexpr auto zz_rem = cnstx::internal::div_mod(xx, yy);
+  constexpr auto zz = std::get<0>(zz_rem);
+  constexpr double z = cnstx::ldexp(zz, exp);
+  EXPECT_EQ(x / y, z);
+}
+
+TEST(CMathTest, div_mod) {
+  div_mod_test<11, 13, -64>();
+  div_mod_test<13, 11, -63>();
+  div_mod_test<13, 22, -64>();
+}
+
 }  // namespace

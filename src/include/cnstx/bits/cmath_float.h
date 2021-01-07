@@ -20,6 +20,7 @@
 #define CNSTX_BITS_CMATH_FLOAT_H_
 
 #include <cmath>
+#include <cstdint>
 #include <tuple>
 #include <type_traits>
 
@@ -141,6 +142,50 @@ constexpr double ldexp(T x, int exp) {
   return ldexp<double>(static_cast<double>(x), exp);
 }
 
+namespace internal {
+
+// 64-bit fixed-point binary division.
+constexpr std::tuple<std::uint64_t, std::uint64_t> div_mod(
+    std::uint64_t dividend, std::uint64_t divisor) {
+  std::uint64_t quotient = 0;
+  int bits = 0;
+  if (dividend >= divisor) {
+    quotient |= 1;
+    dividend -= divisor;
+    ++bits;
+  }
+  while (bits++ < 64) {
+    constexpr std::uint64_t mask63 = 1ULL << 63;
+    std::uint64_t high_bit = dividend & mask63;
+    dividend <<= 1;
+    quotient <<= 1;
+    if (high_bit || dividend >= divisor) {
+      quotient |= 1;
+      if (dividend >= divisor) {
+        dividend -= divisor;
+      } else {
+        // Wrap around in two's complement:
+        dividend = ~(divisor - dividend) + 1;
+      }
+    }
+  }
+  return std::make_tuple(quotient, dividend);
+}
+
+template <typename T, typename std::enable_if<
+                          std::is_floating_point<T>::value>::type * = nullptr>
+constexpr std::uint64_t fraction64(T x) {
+  if (x < 0) x = -x;
+  std::tuple<T, int> norm_exp = frexp(x);
+  T norm = std::get<0>(norm_exp);
+  T scaled = ldexp(norm, 64);
+  std::uint64_t n = static_cast<std::uint64_t>(scaled);
+  // If T is binary128 (quad precision), we should round by looking at
+  // (scaled - n) >= 0.5, but instead we truncate.
+  return n;
+}
+
+}  // namespace internal
 }  // namespace cnstx
 
 #endif  // CNSTX_BITS_CMATH_FLOAT_H_
