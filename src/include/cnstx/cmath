@@ -18,5 +18,6 @@
 #define CNSTX_CMATH_
 
 #include "bits/cmath_float.h"
+#include "bits/cmath_sqrt.h"
 
 #endif  // CNSTX_CMATH_

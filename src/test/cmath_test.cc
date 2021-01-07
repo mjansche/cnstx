@@ -17,6 +17,8 @@
 #include <gtest/gtest.h>
 
 #include <cmath>
+#include <ios>
+#include <limits>
 #include <tuple>
 
 namespace {
@@ -95,6 +97,51 @@ TEST(CMathTest, div_mod) {
   div_mod_test<11, 13, -64>();
   div_mod_test<13, 11, -63>();
   div_mod_test<13, 22, -64>();
+}
+
+#define SQRT_TEST(T, value)                                        \
+  do {                                                             \
+    constexpr T x = value;                                         \
+    constexpr T y = cnstx::sqrt(x);                                \
+    T z = std::sqrt(x);                                            \
+    EXPECT_EQ(z, y) << "Argument: " << std::hexfloat << x          \
+                    << "\nExpected: " << z << "\nObserved: " << y; \
+  } while (false)
+
+TEST(CMathTest, sqrt) {
+  SQRT_TEST(double, 0);
+  SQRT_TEST(double, 1);
+  SQRT_TEST(double, 2);
+  SQRT_TEST(double, 3);
+  SQRT_TEST(double, 4);
+  SQRT_TEST(double, 5);
+  SQRT_TEST(double, 6);
+  SQRT_TEST(double, 7);
+  SQRT_TEST(double, 8);
+  SQRT_TEST(double, 9);
+  SQRT_TEST(double, 15);
+  SQRT_TEST(double, 16);
+  SQRT_TEST(double, 17);
+  SQRT_TEST(double, 31);
+  SQRT_TEST(double, 32);
+  SQRT_TEST(double, 33);
+  SQRT_TEST(double, 63);
+  SQRT_TEST(double, 64);
+  SQRT_TEST(double, 65);
+  if constexpr (std::numeric_limits<long double>::digits <= 64) {
+    SQRT_TEST(long double, 3);
+    SQRT_TEST(long double, 5);
+    SQRT_TEST(long double, 15.0L);
+    SQRT_TEST(long double, 17.0L);
+    SQRT_TEST(long double, 184467440737095516165.0L);
+    SQRT_TEST(long double, 184467440737095516167.0L);
+    SQRT_TEST(long double, 0xf.ffffffffffffff0p+124L);
+    SQRT_TEST(long double, 0xf.ffffffffffffff8p+124L);
+    SQRT_TEST(long double, 0xf.ffffffffffffffcp+124L);
+    SQRT_TEST(long double, 0xf.ffffffffffffffdp+124L);
+    SQRT_TEST(long double, 0xf.ffffffffffffffep+124L);
+    SQRT_TEST(long double, 0xf.fffffffffffffffp+124L);
+  }
 }
 
 }  // namespace
