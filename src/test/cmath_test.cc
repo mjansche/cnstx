@@ -16,9 +16,9 @@
 
 #include <gtest/gtest.h>
 
+#include <cfloat>
 #include <cmath>
 #include <ios>
-#include <limits>
 #include <tuple>
 
 namespace {
@@ -128,20 +128,20 @@ TEST(CMathTest, sqrt) {
   SQRT_TEST(double, 63);
   SQRT_TEST(double, 64);
   SQRT_TEST(double, 65);
-  if constexpr (std::numeric_limits<long double>::digits <= 64) {
-    SQRT_TEST(long double, 3);
-    SQRT_TEST(long double, 5);
-    SQRT_TEST(long double, 15.0L);
-    SQRT_TEST(long double, 17.0L);
-    SQRT_TEST(long double, 184467440737095516165.0L);
-    SQRT_TEST(long double, 184467440737095516167.0L);
-    SQRT_TEST(long double, 0xf.ffffffffffffff0p+124L);
-    SQRT_TEST(long double, 0xf.ffffffffffffff8p+124L);
-    SQRT_TEST(long double, 0xf.ffffffffffffffcp+124L);
-    SQRT_TEST(long double, 0xf.ffffffffffffffdp+124L);
-    SQRT_TEST(long double, 0xf.ffffffffffffffep+124L);
-    SQRT_TEST(long double, 0xf.fffffffffffffffp+124L);
-  }
+#if LDBL_MANT_DIG <= 64
+  SQRT_TEST(long double, 3);
+  SQRT_TEST(long double, 5);
+  SQRT_TEST(long double, 15.0L);
+  SQRT_TEST(long double, 17.0L);
+  SQRT_TEST(long double, 184467440737095516165.0L);
+  SQRT_TEST(long double, 184467440737095516167.0L);
+  SQRT_TEST(long double, 0xf.ffffffffffffff0p+124L);
+  SQRT_TEST(long double, 0xf.ffffffffffffff8p+124L);
+  SQRT_TEST(long double, 0xf.ffffffffffffffcp+124L);
+  SQRT_TEST(long double, 0xf.ffffffffffffffdp+124L);
+  SQRT_TEST(long double, 0xf.ffffffffffffffep+124L);
+  SQRT_TEST(long double, 0xf.fffffffffffffffp+124L);
+#endif
 }
 
 }  // namespace
