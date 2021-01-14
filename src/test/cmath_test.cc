@@ -144,4 +144,78 @@ TEST(CMathTest, sqrt) {
 #endif
 }
 
+template <typename T, int n>
+void log1p2x_test() {
+  constexpr T y = cnstx::internal::log1p2x<T>(n);
+  T z = std::log1p(std::ldexp(T{1}, -n));
+  EXPECT_EQ(z, y) << "Argument: " << n << "\nExpected: " << std::hexfloat << z
+                  << "\nObserved: " << y;
+}
+
+TEST(CMathTest, log1p2x) {
+  log1p2x_test<float, 0>();
+  log1p2x_test<float, 1>();
+  log1p2x_test<float, 2>();
+  log1p2x_test<float, 4>();
+  log1p2x_test<float, 8>();
+  log1p2x_test<float, 16>();
+  log1p2x_test<float, 32>();
+  log1p2x_test<float, 64>();
+  log1p2x_test<float, 96>();
+  log1p2x_test<float, 112>();
+  log1p2x_test<float, 120>();
+  log1p2x_test<float, 124>();
+  log1p2x_test<float, 125>();
+
+  log1p2x_test<double, 0>();
+  log1p2x_test<double, 1>();
+  log1p2x_test<double, 2>();
+  log1p2x_test<double, 4>();
+  log1p2x_test<double, 8>();
+  log1p2x_test<double, 16>();
+  log1p2x_test<double, 32>();
+  log1p2x_test<double, 64>();
+  log1p2x_test<double, 128>();
+  log1p2x_test<double, 256>();
+  log1p2x_test<double, 512>();
+  log1p2x_test<double, 768>();
+  log1p2x_test<double, 896>();
+  log1p2x_test<double, 960>();
+  log1p2x_test<double, 992>();
+  log1p2x_test<double, 1008>();
+  log1p2x_test<double, 1016>();
+  log1p2x_test<double, 1020>();
+  log1p2x_test<double, 1021>();
+
+  log1p2x_test<long double, 0>();
+  log1p2x_test<long double, 1>();
+  log1p2x_test<long double, 2>();
+  log1p2x_test<long double, 4>();
+  log1p2x_test<long double, 8>();
+  log1p2x_test<long double, 16>();
+  log1p2x_test<long double, 32>();
+  log1p2x_test<long double, 64>();
+  log1p2x_test<long double, 128>();
+  log1p2x_test<long double, 256>();
+  log1p2x_test<long double, 512>();
+#if LDBL_MANT_DIG > 53
+  log1p2x_test<long double, 1024>();
+  log1p2x_test<long double, 2048>();
+  log1p2x_test<long double, 4096>();
+  log1p2x_test<long double, 8192>();
+  log1p2x_test<long double, 12288>();
+  log1p2x_test<long double, 14336>();
+  log1p2x_test<long double, 15360>();
+  log1p2x_test<long double, 15872>();
+  log1p2x_test<long double, 16128>();
+  log1p2x_test<long double, 16256>();
+  log1p2x_test<long double, 16320>();
+  log1p2x_test<long double, 16352>();
+  log1p2x_test<long double, 16368>();
+  log1p2x_test<long double, 16376>();
+  log1p2x_test<long double, 16380>();
+  log1p2x_test<long double, 16381>();
+#endif
+}
+
 }  // namespace
