@@ -218,4 +218,24 @@ TEST(CMathTest, log1p2x) {
 #endif
 }
 
+#define LOG_SMALL_TEST(T, value)                                   \
+  do {                                                             \
+    constexpr T x = value;                                         \
+    constexpr T y = cnstx::internal::log_small<T>(x);              \
+    T z = std::log(x);                                             \
+    EXPECT_EQ(z, y) << "Argument: " << std::hexfloat << x          \
+                    << "\nExpected: " << z << "\nObserved: " << y; \
+  } while (false)
+
+TEST(CMathTest, log_small) {
+  LOG_SMALL_TEST(float, 1);
+  LOG_SMALL_TEST(float, 1.25);
+  LOG_SMALL_TEST(float, 1.5);
+
+  LOG_SMALL_TEST(double, 1);
+  LOG_SMALL_TEST(double, 1.25);
+  LOG_SMALL_TEST(double, 1.5);
+  LOG_SMALL_TEST(double, 1.75);
+}
+
 }  // namespace

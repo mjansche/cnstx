@@ -47,6 +47,28 @@ constexpr T log1p2x(int n) {
   return sum;
 }
 
+// Computes log(x) for small values of x using the Restoring Log Algorithm.
+template <typename T, int n = 130>
+constexpr T log_small(T x) {
+  // Sufficient precondition: 1 <= x <= 4.768462
+  if (x == 1) return 0;
+  T sum = 0;
+  T c = 0;
+  T e = 1;
+  for (int i = 0; i < n; ++i) {
+    T e2 = e + cnstx::ldexp(e, -i);
+    if (e2 > x) continue;
+    e = e2;
+    T y = log1p2x<T>(i);
+    y -= c;
+    T t = sum + y;
+    c = (t - sum) - y;
+    sum = t;
+    if (e == x) break;
+  }
+  return sum;
+}
+
 }  // namespace internal
 }  // namespace cnstx
 
